@@ -5,6 +5,7 @@ class MyStyle {
 
   Color textColor = Color.fromARGB(0xff, 0xbc, 0x51, 0x00);
   Color mainColor = Color.fromARGB(0xff, 0xf5, 0x7f, 0x17);
+  Color barColor = Color.fromARGB(0xff, 0xff, 0xb0, 0x4c);
 
   TextStyle h1Main = GoogleFonts.pacifico(
         textStyle: TextStyle(

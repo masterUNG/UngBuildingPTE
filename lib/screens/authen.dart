@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ungbuilding/screens/register.dart';
 import 'package:ungbuilding/utility/my_style.dart';
 
 class Authen extends StatefulWidget {
@@ -78,7 +79,13 @@ class _AuthenState extends State<Authen> {
         'Sign Up',
         style: TextStyle(color: MyStyle().textColor),
       ),
-      onPressed: () {},
+      onPressed: () {
+        print('You Click Sign Up');
+
+        MaterialPageRoute materialPageRoute = MaterialPageRoute(builder: (BuildContext buildContext){return Register();});
+        Navigator.of(context).push(materialPageRoute);
+
+      },
     );
   }
 
