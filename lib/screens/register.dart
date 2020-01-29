@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ungbuilding/utility/my_constant.dart';
 import 'package:ungbuilding/utility/my_style.dart';
 import 'package:ungbuilding/utility/normal_dialog.dart';
 
@@ -157,7 +159,7 @@ class _RegisterState extends State<Register> {
             user.isEmpty ||
             password == null ||
             password.isEmpty) {
-              normalDialog(context, 'Have Space', 'Please Fill Every Blank');
+          normalDialog(context, 'Have Space', 'Please Fill Every Blank');
         } else {
           processUploadAvatar();
         }
@@ -165,7 +167,34 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  Future<void> processUploadAvatar()async{}
+  Future<void> processUploadAvatar() async {
+    try {
+      Map<String, dynamic> map = Map();
+      map['file'] = UploadFileInfo(file, '$name.jpg');
+      FormData formData = FormData.from(map);
+
+      await Dio()
+          .post(MyConstant().urlAPIsaveFile, data: formData)
+          .then((response) {
+        print('response = $response');
+        processInsertDatabase();
+      });
+    } catch (e) {}
+  }
+
+  Future<void> processInsertDatabase() async {
+    String avatar = 'https://www.androidthai.in.th/pte/avatarMaster/$name.jpg';
+    String url =
+        'https://www.androidthai.in.th/pte/addUserMaster.php?isAdd=true&Name=$name&User=$user&Password=$password&Avatar=$avatar';
+
+    await Dio().get(url).then((response) {
+      if (response.toString() == 'true') {
+        Navigator.of(context).pop();
+      } else {
+        normalDialog(context, 'Register False', 'Please Try Again');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
