@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ungbuilding/utility/my_style.dart';
+import 'package:ungbuilding/utility/normal_dialog.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -8,6 +12,8 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   // Field
+  File file;
+  String name, user, password;
 
   // Method
   Widget nameForm() {
@@ -15,6 +21,9 @@ class _RegisterState extends State<Register> {
     return Container(
       margin: EdgeInsets.only(left: 30.0, right: 30.0),
       child: TextField(
+        onChanged: (String string) {
+          name = string.trim();
+        },
         style: TextStyle(color: color),
         decoration: InputDecoration(
           enabledBorder:
@@ -38,6 +47,9 @@ class _RegisterState extends State<Register> {
     return Container(
       margin: EdgeInsets.only(left: 30.0, right: 30.0),
       child: TextField(
+        onChanged: (String string) {
+          user = string.trim();
+        },
         style: TextStyle(color: color),
         decoration: InputDecoration(
           enabledBorder:
@@ -61,6 +73,9 @@ class _RegisterState extends State<Register> {
     return Container(
       margin: EdgeInsets.only(left: 30.0, right: 30.0),
       child: TextField(
+        onChanged: (String string) {
+          password = string.trim();
+        },
         style: TextStyle(color: color),
         decoration: InputDecoration(
           enabledBorder:
@@ -82,14 +97,32 @@ class _RegisterState extends State<Register> {
   Widget cameraButton() {
     return IconButton(
       icon: Icon(Icons.add_a_photo),
-      onPressed: () {},
+      onPressed: () {
+        getPhoto(ImageSource.camera);
+      },
     );
+  }
+
+  Future<void> getPhoto(ImageSource imageSource) async {
+    try {
+      var object = await ImagePicker.pickImage(
+        source: imageSource,
+        maxWidth: 800.0,
+        maxHeight: 800.0,
+      );
+
+      setState(() {
+        file = object;
+      });
+    } catch (e) {}
   }
 
   Widget galleryButton() {
     return IconButton(
       icon: Icon(Icons.add_photo_alternate),
-      onPressed: () {},
+      onPressed: () {
+        getPhoto(ImageSource.gallery);
+      },
     );
   }
 
@@ -108,16 +141,31 @@ class _RegisterState extends State<Register> {
       padding: EdgeInsets.all(20.0),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.5,
-      child: Image.asset('images/avatar.png'),
+      child: file == null ? Image.asset('images/avatar.png') : Image.file(file),
     );
   }
 
   Widget registerButton() {
     return IconButton(
       icon: Icon(Icons.cloud_upload),
-      onPressed: () {},
+      onPressed: () {
+        if (file == null) {
+          normalDialog(context, 'No Avatar', 'Please Click Camera or Gallery');
+        } else if (name == null ||
+            name.isEmpty ||
+            user == null ||
+            user.isEmpty ||
+            password == null ||
+            password.isEmpty) {
+              normalDialog(context, 'Have Space', 'Please Fill Every Blank');
+        } else {
+          processUploadAvatar();
+        }
+      },
     );
   }
+
+  Future<void> processUploadAvatar()async{}
 
   @override
   Widget build(BuildContext context) {
