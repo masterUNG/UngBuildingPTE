@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ungbuilding/widget/list_building.dart';
 
 class MyService extends StatefulWidget {
   @override
@@ -6,10 +7,22 @@ class MyService extends StatefulWidget {
 }
 
 class _MyServiceState extends State<MyService> {
+  // Filed
+  Widget currentWidget = ListBuilding();
+
+  // Method
+  Widget showDrawer() {
+    return Drawer();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('My Service'),),
+      appBar: AppBar(
+        title: Text('My Service'),
+      ),
+      drawer: showDrawer(),
+      body: currentWidget,
     );
   }
 }
