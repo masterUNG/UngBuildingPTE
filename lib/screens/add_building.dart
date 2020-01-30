@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class AddBuildtin extends StatefulWidget {
   @override
@@ -7,8 +10,50 @@ class AddBuildtin extends StatefulWidget {
 
 class _AddBuildtinState extends State<AddBuildtin> {
   // Field
+  double lat, lng;
 
   // Method
+  @override
+  void initState() {
+    super.initState();
+    findLatLng();
+  }
+
+  Future<void> findLatLng() async {
+    Duration duration = Duration(seconds: 10);
+    await Timer(duration, () {
+      setState(() {
+        lat = 13.677872;
+        lng = 100.586286;
+      });
+    });
+  }
+
+  Widget showDetailMap() {
+    LatLng latLng = LatLng(lat, lng);
+    CameraPosition cameraPosition = CameraPosition(
+      target: latLng,
+      zoom: 16,
+    );
+    return GoogleMap(
+      mapType: MapType.normal,
+      initialCameraPosition: cameraPosition,
+      onMapCreated: (GoogleMapController googleMapController) {},
+    );
+  }
+
+  Widget showMap() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * 0.3,
+      child: lat == null
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : showDetailMap(),
+    );
+  }
+
   Widget nameForm() {
     return Container(
       width: 250.0,
@@ -42,6 +87,7 @@ class _AddBuildtinState extends State<AddBuildtin> {
         showImage(),
         nameForm(),
         detailForm(),
+        showMap(),
       ],
     );
   }
